@@ -13,7 +13,7 @@ app.use("/auth", authRouter);
 app.use("/chat", chatbotRouter);
 
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to SereniMind – Your AI Companion for Calm, Clarity, and Support." });
+  res.json({ message: "Welcome to MindScribe" });
 });
 
 app.listen(PORT, () => {
