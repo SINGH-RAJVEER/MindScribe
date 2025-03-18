@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+pydantic
+bcrypt
+pyjwt
+torch
+transformers
+datasets
+python-telegram-bot
+gtts
+SpeechRecognition
+pydub
+requests
