@@ -13,12 +13,12 @@ function Login() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#FBFBFB' }}>
       <div className="w-full max-w-md space-y-8">
         <div className="textscroller text-center">
           <h2 className="text-animation text-gray-800 font-bold text-4xl whitespace-nowrap">Where Health Meets <span></span></h2>
         </div>
-        <div className="signinbox border border-gray-300 p-6 rounded-lg shadow-lg">
+        <div className="signinbox border border-gray-300 p-6 rounded-lg shadow-lg" style={{ backgroundColor: '#C4D9FF' }}>
           <div>
             <h3 className="mt-6 text-center text-2xl font-extrabold text-gray-900">Sign in to your account</h3>
           </div>
@@ -59,13 +59,14 @@ function Login() {
             <div>
               <button
                 type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white"
+                style={{ backgroundColor: '#C5BAFF' }}
               >
                 Sign in
               </button>
             </div>
           </form>
-          <div className="text-center">
+          <div className="text-center pt-4">
             <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
               Don't have an account? Register
             </Link>

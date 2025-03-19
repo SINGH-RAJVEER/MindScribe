@@ -89,8 +89,7 @@ function Dashboard() {
           </div>
           <button
             onClick={startNewConversation}
-            className="m-4 p-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-150 flex items-center justify-center"
-          >
+            className="m-4 p-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-150 flex items-center justify-center">
             New Chat
           </button>
         </div>
