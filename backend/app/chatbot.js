@@ -4,11 +4,43 @@ const { v4: uuidv4 } = require("uuid");
 const { getCurrentUser } = require("./auth");
 const { CRISIS_WORDS, DETECT_MOOD } = require("./moodCrisisData");
 const db = require("./database");
+const fetch = global.fetch; // Use the global fetch provided by Node v18+
 
-// Simulated chat response function (replace with real integration if needed)
-const getChatResponse = (userMessage) => {
-  // Here you might call an external API/model
-  return `Simulated response to: ${userMessage}`;
+// Updated getChatResponse function with extra logging for debugging
+const getChatResponse = async (userMessage) => {
+  // Ensure that DEEPSEEK_API_URL is correctly set in your .env file
+  const url = process.env.DEEPSEEK_API_URL || "http://localhost:11434/api/models/your_model_name/predict";
+  const payload = {
+    input: userMessage, // using "input" as expected by Ollama
+    // add any additional parameters required by your Ollama model here
+  };
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    // Read the raw text response
+    const text = await response.text();
+    // Log raw response to diagnose endpoint issues
+    console.log("Raw response from model endpoint:", text);
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (parseErr) {
+      console.error("Failed to parse JSON. Raw response:", text);
+      throw new Error("Failed to parse JSON from model response");
+    }
+    if (!response.ok) {
+      console.error("Ollama responded with error:", data);
+      throw new Error(data.error?.message || "Ollama API error");
+    }
+    // Return the model result using the dedicated field (update if needed)
+    return data.response ? data.response.trim() : data.result.trim();
+  } catch (err) {
+    console.error("Error in getChatResponse:", err);
+    throw err;
+  }
 };
 
 const detectMood = (userMessage) => {
@@ -46,19 +78,25 @@ router.post("/", getCurrentUser, (req, res) => {
     conversation_id = uuidv4();
     createNewConversation(user.id, conversation_id, (err) => {
       if (err) return res.status(500).json({ detail: err.message });
+      // Call processChat and catch errors
       processChat();
     });
   } else {
     processChat();
   }
 
-  function processChat() {
+  // Modify processChat to be async so we can await getChatResponse
+  async function processChat() {
     let responseText;
     if (isCrisis)
       responseText = "Please seek professional help. You're not alone ❤️.";
-    else 
-      responseText = getChatResponse(user_message);
-      
+    else {
+      try {
+        responseText = await getChatResponse(user_message);
+      } catch (err) {
+        return res.status(500).json({ detail: err.message });
+      }
+    }
     storeChat(user.id, conversation_id, user_message, responseText, mood, isCrisis, (err) => {
       if (err) return res.status(500).json({ detail: err.message });
       res.json({ response: responseText, conversation_id, mood });
