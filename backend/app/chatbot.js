@@ -6,7 +6,7 @@ const { CRISIS_WORDS, DETECT_MOOD } = require("./moodCrisisData");
 const db = require("./database");
 
 const getChatResponse = async (userMessage) => {
-    let convo;
+    let convo = "";  
     const url = "http://localhost:3000/api/generate";
     const payload = {
       model: "deepseek-r1:8b",
@@ -97,11 +97,35 @@ router.post("/", getCurrentUser, async (req, res) => {
     let responseText;
     if (isCrisis)
       responseText = "Please seek professional help. You're not alone ❤️.";
-    else 
-      responseText = await getChatResponse(user_message);
+    else {
+      // Build conversation context to include previous interactions
+      const buildPrompt = () => {
+        return new Promise((resolve, reject) => {
+          db.all(
+            "SELECT user_message, bot_response FROM messages WHERE conversation_id = ? ORDER BY timestamp ASC",
+            [conversation_id],
+            (err, rows) => {
+              if (err) return reject(err);
+              let context = "";
+              rows.forEach(row => {
+                context += `User: ${row.user_message}\nBot: ${row.bot_response}\n`;
+              });
+              resolve(context + "User: " + user_message);
+            }
+          );
+        });
+      };
 
+      let promptWithContext;
+      try {
+        promptWithContext = await buildPrompt();
+      } catch (err) {
+        promptWithContext = user_message;
+      }
+      responseText = await getChatResponse(promptWithContext);
+    }
     
-    console.log(responseText)
+    console.log(responseText);
       
     storeChat(user.id, conversation_id, user_message, responseText, mood, isCrisis, (err) => {
       if (err) return res.status(500).json({ detail: err.message });
