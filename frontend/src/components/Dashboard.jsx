@@ -71,7 +71,7 @@ function Dashboard() {
     return (
       <div className="flex h-screen" style={{ backgroundColor: '#C5BAFF' }}>
         <div className="w-64 bg-gray-900 shadow-lg flex flex-col" style={{ backgroundColor: '#E8F9FF' }}>
-          <div className="p-4 border-b border-gray-800 shadow-md" style={{ backgroundColor: '#b84dff' }}>
+          <div className="p-4 border-b border-gray-800 shadow-md" style={{ backgroundColor: '#B7B1F2' }}>
             <h2 className="text-xl font-semibold text-black-200"  >Chats</h2>
           </div>
           <div className="flex-1 overflow-y-auto">
@@ -96,7 +96,7 @@ function Dashboard() {
   
         {/* Main Chat Area */}
         <div className="flex flex-1 flex-col" >
-          <header className="bg-gray-800 p-4 shadow-md flex justify-between" style={{ backgroundColor: '#b84dff' }}>
+          <header className="bg-gray-800 p-4 shadow-md flex justify-between" style={{ backgroundColor: '#B7B1F2' }}>
             <h1 className="text-2xl font-bold text-black-200">MindScribe</h1>
             <button onClick={logout} className="bg-red-600 px-4 py-2 rounded-md text-white hover:bg-red-700">
               Logout
