@@ -109,7 +109,7 @@ function Dashboard() {
                 type="text"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                className="flex-1 bg-gray-700 text-black rounded-md p-2" style={{backgroundColor:'#E8F9FF'}}
+                className="flex-1 bg-gray-700 text-black rounded-md p-2" style={{backgroundColor:'#E8F9FF', color: 'black'}}
                 placeholder="Enter your prompt"
               />
               <button type="submit" className="bg-indigo-600 px-4 py-2 rounded-md text-black flex items-center">
