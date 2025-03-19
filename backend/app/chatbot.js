@@ -6,7 +6,7 @@ const { CRISIS_WORDS, DETECT_MOOD } = require("./moodCrisisData");
 const db = require("./database");
 
 const getChatResponse = async (userMessage) => {
-    let convo;
+    let convo = "";  
     const url = "http://localhost:3000/api/generate";
     const payload = {
       model: "deepseek-r1:8b",
