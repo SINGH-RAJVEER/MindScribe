@@ -69,10 +69,10 @@ function Dashboard() {
     };
       
     return (
-      <div className="flex h-screen bg-gradient-to-br from-indigo-500 to-purple-600 text-white">
-        <div className="w-64 bg-gray-900 shadow-lg flex flex-col">
-          <div className="p-4 border-b border-gray-800">
-            <h2 className="text-xl font-semibold text-gray-200">Chats</h2>
+      <div className="flex h-screen" style={{ backgroundColor: '#C5BAFF' }}>
+        <div className="w-64 bg-gray-900 shadow-lg flex flex-col" style={{ backgroundColor: '#E8F9FF' }}>
+          <div className="p-4 border-b border-gray-800 shadow-md" style={{ backgroundColor: '#E8F9FF' }}>
+            <h2 className="text-xl font-semibold text-black-200"  >Chats</h2>
           </div>
           <div className="flex-1 overflow-y-auto">
             {chatHistory?.map((chat) => (
@@ -95,9 +95,9 @@ function Dashboard() {
         </div>
   
         {/* Main Chat Area */}
-        <div className="flex flex-1 flex-col">
-          <header className="bg-gray-800 p-4 shadow-md flex justify-between">
-            <h1 className="text-2xl font-bold text-gray-200">MindScribe</h1>
+        <div className="flex flex-1 flex-col" >
+          <header className="bg-gray-800 p-4 shadow-md flex justify-between" style={{ backgroundColor: '#E8F9FF' }}>
+            <h1 className="text-2xl font-bold text-black-200">MindScribe</h1>
             <button onClick={logout} className="bg-red-600 px-4 py-2 rounded-md text-white hover:bg-red-700">
               Logout
             </button>
@@ -118,22 +118,22 @@ function Dashboard() {
             </form>
   
             {/* Chat Messages */}
-            <div className="rounded-lg bg-gray-800 p-4 shadow-lg h-[80vh] overflow-y-auto">
-              <h2 className="mb-4 text-xl font-semibold text-gray-200">Chat</h2>
+            <div className="rounded-lg bg-gray-800 p-4 shadow-lg h-[80vh] overflow-y-auto" style={{ backgroundColor: '#E8F9FF' }}>
+              <h2 className="mb-4 text-xl font-semibold text-black-200">Chat</h2>
               <div className="space-y-4">
               {selectedConversation ? (
   selectedConversation.messages.map((message) => (
     <div key={message.id} className="flex flex-col space-y-2">
       {/* User Message */}
       {message.user_message && (
-        <div className="rounded-lg p-3 bg-indigo-600 ml-auto max-w-[80%] break-words">
+        <div className="rounded-lg p-3 bg-indigo-600 ml-auto max-w-[80%] break-words" style={{ backgroundColor: '#FBFBFB' }}>
           {message.user_message}
         </div>
       )}
       
       {/* Bot Response */}
       {message.bot_response && (
-        <div className="rounded-lg p-3 bg-gray-700 max-w-[80%] break-words">
+        <div className="rounded-lg p-3 bg-gray-700 max-w-[80%] break-words" style={{ backgroundColor: '#9900FF' }}>
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {cleanBotResponse(message.bot_response)}
           </ReactMarkdown>
