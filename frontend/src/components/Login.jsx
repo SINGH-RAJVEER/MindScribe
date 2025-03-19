@@ -14,8 +14,9 @@ function Login() {
 
   return (
     <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#FBFBFB' }}>
-      <div className="w-full max-w-md space-y-8">
-        <div className="textscroller text-center">
+      <div className="w-full max-w-md space-y-8 text-center">
+        <h1 className="text-5xl font-extrabold text-yellow-500 text-center">MindScribe</h1>
+        <div className="textscroller">
           <h2 className="text-animation text-gray-800 font-bold text-4xl whitespace-nowrap">Where Health Meets <span></span></h2>
         </div>
         <div className="signinbox border border-gray-300 p-6 rounded-lg shadow-lg" style={{ backgroundColor: '#C4D9FF' }}>

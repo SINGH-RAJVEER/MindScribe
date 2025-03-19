@@ -71,14 +71,14 @@ function Dashboard() {
     return (
       <div className="flex h-screen" style={{ backgroundColor: '#C5BAFF' }}>
         <div className="w-64 bg-gray-900 shadow-lg flex flex-col" style={{ backgroundColor: '#E8F9FF' }}>
-          <div className="p-4 border-b border-gray-800 shadow-md" style={{ backgroundColor: '#E8F9FF' }}>
+          <div className="p-4 border-b border-gray-800 shadow-md" style={{ backgroundColor: '#b84dff' }}>
             <h2 className="text-xl font-semibold text-black-200"  >Chats</h2>
           </div>
           <div className="flex-1 overflow-y-auto">
             {chatHistory?.map((chat) => (
               <div
                 key={chat.id}
-                className={`p-3 hover:bg-gray-800 cursor-pointer transition-colors duration-150 ${
+                className={`p-3 m-2 bg-white rounded-lg shadow-md hover:bg-gray-800 cursor-pointer transition-colors duration-150 ${
                   selectedConversation && selectedConversation.id === chat.id ? "bg-gray-800" : ""
                 }`}
                 onClick={() => setSelectedConversation(chat)}
@@ -96,20 +96,20 @@ function Dashboard() {
   
         {/* Main Chat Area */}
         <div className="flex flex-1 flex-col" >
-          <header className="bg-gray-800 p-4 shadow-md flex justify-between" style={{ backgroundColor: '#E8F9FF' }}>
+          <header className="bg-gray-800 p-4 shadow-md flex justify-between" style={{ backgroundColor: '#b84dff' }}>
             <h1 className="text-2xl font-bold text-black-200">MindScribe</h1>
             <button onClick={logout} className="bg-red-600 px-4 py-2 rounded-md text-white hover:bg-red-700">
               Logout
             </button>
           </header>
   
-          <main className="flex-1 overflow-y-auto p-4">
-            <form onSubmit={handleSendMessage} className="mb-4 flex space-x-2">
+          <main className="flex-1 overflow-y-auto p-4" >
+            <form onSubmit={handleSendMessage} className="mb-4 flex space-x-2" >
               <input
                 type="text"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                className="flex-1 bg-gray-700 text-white rounded-md p-2"
+                className="flex-1 bg-gray-700 text-white rounded-md p-2" style={{backgroundColor:'#E8F9FF'}}
                 placeholder="Enter your prompt"
               />
               <button type="submit" className="bg-indigo-600 px-4 py-2 rounded-md text-white flex items-center">
@@ -118,7 +118,7 @@ function Dashboard() {
             </form>
   
             {/* Chat Messages */}
-            <div className="rounded-lg bg-gray-800 p-4 shadow-lg h-[80vh] overflow-y-auto" style={{ backgroundColor: '#E8F9FF' }}>
+            <div className="rounded-lg bg-gray-800 p-4 shadow-lg h-[80vh] overflow-y-auto" style={{ backgroundColor: '#FBFBFB' }}>
               <h2 className="mb-4 text-xl font-semibold text-black-200">Chat</h2>
               <div className="space-y-4">
               {selectedConversation ? (

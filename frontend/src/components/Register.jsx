@@ -15,7 +15,8 @@ function Register() {
 
   return (
     <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#FBFBFB' }}>
-      <div className="w-full max-w-md space-y-8">
+      <div className="w-full max-w-md space-y-8 text-center">
+        <h1 className="text-5xl font-extrabold text-yellow-500 text-center">MindScribe</h1>
         <div className="registerbox border border-gray-300 p-6 rounded-lg shadow-lg" style={{ backgroundColor: '#C4D9FF' }}>
           <div>
             <h2 className="mt-6 text-center text-2xl font-extrabold text-gray-900">

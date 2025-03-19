@@ -1,7 +1,9 @@
 :root{
     font-family:"DM sans",serif;
 }
-
+h1{
+    font-family:"Cedarville Cursive";
+}
 .text-animation span {
     position: relative;
 }
