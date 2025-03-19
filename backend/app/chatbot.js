@@ -5,40 +5,6 @@ const { getCurrentUser } = require("./auth");
 const { CRISIS_WORDS, DETECT_MOOD } = require("./moodCrisisData");
 const db = require("./database");
 
-// Updated getChatResponse function to perform a POST request to localhost:3000/api/generate
-// const getChatResponse = async (userMessage) => {
-//   const url = "http://localhost:3000/api/generate";
-//   const payload = {
-//     model: "deepseek-r1:8b",
-//     prompt: userMessage
-//   };
-//   try {
-//     const response = await fetch(url, {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(payload)
-//     });
-//     const text = await response.json();
-//     let data;
-//     try {
-
-//       data = JSON.parse(text);
-
-
-//     } catch (parseErr) {
-//       console.error("Failed to parse JSON. Raw response:", text);
-//       throw new Error("Failed to parse JSON from model response");
-//     }
-//     if (!response.ok) {
-//       throw new Error(data.error?.message || "Model API error");
-//     }
-//     return data.response ? data.response.trim() : data.result.trim();
-//   } catch (err) {
-//     console.error("Error in getChatResponse:", err);
-//     throw err;
-//   }
-// };
-
 const getChatResponse = async (userMessage) => {
     let convo;
     const url = "http://localhost:3000/api/generate";
