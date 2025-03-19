@@ -1,0 +1,63 @@
+:root{
+    font-family:"DM sans",serif;
+}
+
+.text-animation span {
+    position: relative;
+}
+.text-animation span::before {
+    content: 'Web Developer';
+    color: red; 
+    animation: words 20s infinite;
+}
+.text-animation span::after {
+    content: "";
+    background-color: var(--bg-color);
+    position: absolute;
+    width: calc(100% + 80px);
+    height: 100%;
+    border-left: 3px solid var(--bg-color);
+    right: -8px;
+    animation: cursor 0.6s infinite, typing 20s steps(14) infinite;
+}
+
+@keyframes words {
+    0%, 20% {
+        content: 'Safety';
+        color: rgb(0, 47, 255);
+    }
+    21%, 40% {
+        content: 'Convenience';
+        color: rgb(237, 117, 137);
+    }
+    41%, 60% {
+        content: 'Comfort';
+        color: rgb(15, 156, 97);
+    }
+    61%, 80% {
+        content: 'Minimalism';
+        color: rgba(158, 190, 31, 0.842);
+    }
+    81%, 100% {
+        content: 'You';
+        color: rgb(96, 4, 96);
+    }
+}
+
+@keyframes typing {
+    0%, 100% {
+        width: 0;
+    }
+    50% {
+        width: 100%;
+    }
+}
+
+@keyframes cursor {
+    0%, 100% {
+        border-color: black;
+    }
+    50% {
+        border-color: var(--main-color);
+    }
+}

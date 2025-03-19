@@ -5,6 +5,7 @@ import Login from "./components/Login"
 import Dashboard from "./components/Dashboard"
 import ProtectedRoute from "./components/ProtectedRoute"
 import Toast from "./components/Toast"
+import "./style/textes.css"
 
 const queryClient = new QueryClient()
 
