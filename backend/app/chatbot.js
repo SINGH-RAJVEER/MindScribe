@@ -123,6 +123,8 @@ router.post("/", getCurrentUser, async (req, res) => {
         promptWithContext = user_message;
       }
       responseText = await getChatResponse(promptWithContext);
+      // Remove reasoning output enclosed within <think></think> tags
+      responseText = responseText.replace(/<think>[\s\S]*?<\/think>/g, '').trim();
     }
     
     console.log(responseText);
