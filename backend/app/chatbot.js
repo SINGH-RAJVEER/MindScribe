@@ -5,11 +5,86 @@ const { getCurrentUser } = require("./auth");
 const { CRISIS_WORDS, DETECT_MOOD } = require("./moodCrisisData");
 const db = require("./database");
 
-// Simulated chat response function (replace with real integration if needed)
-const getChatResponse = (userMessage) => {
-  // Here you might call an external API/model
-  return `Simulated response to: ${userMessage}`;
-};
+// Updated getChatResponse function to perform a POST request to localhost:3000/api/generate
+// const getChatResponse = async (userMessage) => {
+//   const url = "http://localhost:3000/api/generate";
+//   const payload = {
+//     model: "deepseek-r1:8b",
+//     prompt: userMessage
+//   };
+//   try {
+//     const response = await fetch(url, {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify(payload)
+//     });
+//     const text = await response.json();
+//     let data;
+//     try {
+
+//       data = JSON.parse(text);
+
+
+//     } catch (parseErr) {
+//       console.error("Failed to parse JSON. Raw response:", text);
+//       throw new Error("Failed to parse JSON from model response");
+//     }
+//     if (!response.ok) {
+//       throw new Error(data.error?.message || "Model API error");
+//     }
+//     return data.response ? data.response.trim() : data.result.trim();
+//   } catch (err) {
+//     console.error("Error in getChatResponse:", err);
+//     throw err;
+//   }
+// };
+
+const getChatResponse = async (userMessage) => {
+    let convo;
+    const url = "http://localhost:3000/api/generate";
+    const payload = {
+      model: "deepseek-r1:8b",
+      prompt: userMessage
+    };
+  
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("API Error:", errorText);
+        throw new Error(`Model API error: ${errorText}`);
+      }
+  
+      // Read the response as text
+      const text = await response.text();
+  
+      // Split the text into individual JSON strings based on newlines
+      const lines = text.split("\n").filter(line => line.trim() !== "");
+  
+      // Parse each line as JSON
+      lines.map(line => {
+        try {
+            const ob = JSON.parse(line);
+            convo += ob.response
+        } catch (err) {
+          console.error("Error parsing line:", line);
+          return null;
+        }
+      }).filter(response => response !== null); // Filter out any null responses
+  
+  
+      return convo.trim();
+    } catch (err) {
+      console.error("Error in getChatResponse:", err);
+      throw err;
+    }
+  };
+  
 
 const detectMood = (userMessage) => {
   const lower = userMessage.toLowerCase();
@@ -36,7 +111,7 @@ const storeChat = (userId, conversationId, userMessage, botResponse, mood, isCri
 };
 
 // POST /chat/
-router.post("/", getCurrentUser, (req, res) => {
+router.post("/", getCurrentUser, async (req, res) => {
   const { user } = req;
   let { user_message, conversation_id } = req.body;
   const isCrisis = CRISIS_WORDS.some(word => user_message.toLowerCase().includes(word));
@@ -52,12 +127,15 @@ router.post("/", getCurrentUser, (req, res) => {
     processChat();
   }
 
-  function processChat() {
+  async function processChat() {
     let responseText;
     if (isCrisis)
       responseText = "Please seek professional help. You're not alone ❤️.";
     else 
-      responseText = getChatResponse(user_message);
+      responseText = await getChatResponse(user_message);
+
+    
+    console.log(responseText)
       
     storeChat(user.id, conversation_id, user_message, responseText, mood, isCrisis, (err) => {
       if (err) return res.status(500).json({ detail: err.message });
