@@ -109,10 +109,10 @@ function Dashboard() {
                 type="text"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                className="flex-1 bg-gray-700 text-white rounded-md p-2" style={{backgroundColor:'#E8F9FF'}}
+                className="flex-1 bg-gray-700 text-black rounded-md p-2" style={{backgroundColor:'#E8F9FF'}}
                 placeholder="Enter your prompt"
               />
-              <button type="submit" className="bg-indigo-600 px-4 py-2 rounded-md text-white flex items-center">
+              <button type="submit" className="bg-indigo-600 px-4 py-2 rounded-md text-black flex items-center">
                 {loading ? <FaSpinner className="animate-spin mr-2" /> : <FaPaperPlane />}
               </button>
             </form>
@@ -126,14 +126,14 @@ function Dashboard() {
     <div key={message.id} className="flex flex-col space-y-2">
       {/* User Message */}
       {message.user_message && (
-        <div className="rounded-lg p-3 bg-indigo-600 ml-auto max-w-[80%] break-words" style={{ backgroundColor: '#FBFBFB' }}>
+        <div className="rounded-lg p-3 bg-indigo-600 ml-auto max-w-[80%] break-words" style={{ backgroundColor: '#C4D9FF' }}>
           {message.user_message}
         </div>
       )}
       
       {/* Bot Response */}
       {message.bot_response && (
-        <div className="rounded-lg p-3 bg-gray-700 max-w-[80%] break-words" style={{ backgroundColor: '#9900FF' }}>
+        <div className="rounded-lg p-3 bg-gray-700 max-w-[80%] break-words" style={{ backgroundColor: '#FDB7EA' }}>
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
             {cleanBotResponse(message.bot_response)}
           </ReactMarkdown>
