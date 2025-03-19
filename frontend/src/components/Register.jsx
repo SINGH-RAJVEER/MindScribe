@@ -26,7 +26,7 @@ function Register() {
           <form className="mt-8 space-y-6" onSubmit={handleRegister}>
             <div className="rounded-md shadow-sm space-y-4">
               <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1 text-left">
                   Username
                 </label>
                 <input
@@ -40,7 +40,7 @@ function Register() {
                 />
               </div>
               <div>
-                <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 mb-1 text-left">
                   Email address
                 </label>
                 <input
@@ -55,7 +55,7 @@ function Register() {
                 />
               </div>
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1 text-left">
                   Password
                 </label>
                 <input
