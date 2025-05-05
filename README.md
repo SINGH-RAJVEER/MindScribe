@@ -20,7 +20,7 @@ MindScribe is your friendly AI-assisted chat companion dedicated to mental well-
 To get started with MindScribe, simply clone the repository and follow the instructions below:
 
 ```bash
-git clone https://github.com/yourusername/MindScribe.git
+git clone https://github.com/SINGH-RAJVEER/MindScribe.git
 cd MindScribe
 npm install
 npm run dev
