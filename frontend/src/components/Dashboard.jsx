@@ -1,10 +1,44 @@
 import { useState, useEffect, useRef } from "react";
-import { FaPaperPlane, FaSpinner } from "react-icons/fa";
+import { FaPaperPlane, FaSpinner, FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { useFetchChatHistory, useSendMessage } from "../hooks/useChat";
 import { useLogout } from "../hooks/useLogout";
 import useChatStore from "../store/chatStore";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+
+// Reasoning Box Component
+const ReasoningBox = ({ reasoningText }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  if (!reasoningText) return null;
+
+  return (
+    <div className="my-2 border border-gray-600 rounded-md bg-gray-800">
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full flex items-center justify-between p-3 text-left hover:bg-gray-750 transition-colors duration-150"
+      >
+        <span className="text-sm font-medium text-blue-300">
+          Model Reasoning
+        </span>
+        {isExpanded ? (
+          <FaChevronDown className="text-blue-300" />
+        ) : (
+          <FaChevronRight className="text-blue-300" />
+        )}
+      </button>
+      {isExpanded && (
+        <div className="px-3 pb-3 border-t border-gray-600">
+          <div className="bg-gray-900 rounded p-3 text-sm text-gray-300">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {reasoningText}
+            </ReactMarkdown>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 function Dashboard() {
   const {
@@ -16,8 +50,16 @@ function Dashboard() {
   } = useChatStore();
   const chatEndRef = useRef(null);
 
-  const cleanBotResponse = (text) => {
-    return text.replace(/<think>[\s\S]*?<\/think>\n?/g, "").trim();
+  // Updated function to extract both reasoning and clean response
+  const extractBotContent = (text) => {
+    const thinkingMatch = text.match(/<think>([\s\S]*?)<\/think>/);
+    const reasoning = thinkingMatch ? thinkingMatch[1].trim() : null;
+    const cleanResponse = text.replace(/<think>[\s\S]*?<\/think>\n?/g, "").trim();
+    
+    return {
+      reasoning,
+      cleanResponse
+    };
   };
 
   const [prompt, setPrompt] = useState("");
@@ -126,30 +168,42 @@ function Dashboard() {
         </header>
 
         <main className="flex-1 flex flex-col p-4">
-          {/* Chat Messages - Now positioned above the input */}
+          {/* Chat Messages */}
           <div className="flex-1 rounded-lg bg-gray-800 p-4 shadow-lg mb-4 flex flex-col">
             <h2 className="mb-4 text-xl font-semibold text-gray-200">Chat</h2>
             <div className="flex-1 overflow-y-auto space-y-4">
               {selectedConversation ? (
                 <>
-                  {selectedConversation.messages.map((message, idx) => (
-                    <div key={message.id || idx} className="flex flex-col space-y-2">
-                      {/* User Message */}
-                      {message.user_message && (
-                        <div className="rounded-lg p-3 bg-indigo-600 ml-auto max-w-[80%] break-words">
-                          {message.user_message}
-                        </div>
-                      )}
-                      {/* Bot Response */}
-                      {message.bot_response && (
-                        <div className="rounded-lg p-3 bg-gray-700 max-w-[80%] break-words">
-                          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {cleanBotResponse(message.bot_response)}
-                          </ReactMarkdown>
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                  {selectedConversation.messages.map((message, idx) => {
+                    // Extract content for bot responses
+                    const botContent = message.bot_response 
+                      ? extractBotContent(message.bot_response)
+                      : null;
+
+                    return (
+                      <div key={message.id || idx} className="flex flex-col space-y-2">
+                        {/* User Message */}
+                        {message.user_message && (
+                          <div className="rounded-lg p-3 bg-indigo-600 ml-auto max-w-[80%] break-words">
+                            {message.user_message}
+                          </div>
+                        )}
+                        {/* Bot Response */}
+                        {message.bot_response && (
+                          <div className="max-w-[80%] break-words">
+                            {/* Reasoning Box */}
+                            <ReasoningBox reasoningText={botContent?.reasoning} />
+                            {/* Main Response */}
+                            <div className="rounded-lg p-3 bg-gray-700">
+                              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {botContent?.cleanResponse}
+                              </ReactMarkdown>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                   {loading && (
                     <div className="text-gray-400 flex items-center">
                       <FaSpinner className="animate-spin mr-2" /> Generating
@@ -167,7 +221,7 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* Input form - Now at the bottom */}
+          {/* Input form */}
           <form onSubmit={handleSendMessage} className="flex space-x-2">
             <input
               type="text"
