@@ -6,6 +6,8 @@ import useChatStore from "../store/chatStore";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import PropTypes from "prop-types";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 const ReasoningBox = ({ reasoningText }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -237,17 +239,17 @@ function Dashboard() {
           </div>
 
           <form onSubmit={handleSendMessage} className="flex space-x-2 flex-shrink-0">
-            <input
+            <Input
               type="text"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              className="flex-1 bg-gray-700 text-white rounded-md p-2"
               placeholder="Enter your prompt"
               disabled={loading}
+              className="flex-1"
             />
-            <button
+            <Button
               type="submit"
-              className="bg-indigo-600 px-4 py-2 rounded-md text-white flex items-center hover:bg-indigo-700 disabled:opacity-50"
+              className="flex items-center"
               disabled={loading}
             >
               {loading ? (
@@ -255,7 +257,7 @@ function Dashboard() {
               ) : (
                 <FaPaperPlane />
               )}
-            </button>
+            </Button>
           </form>
         </div>
       </div>
