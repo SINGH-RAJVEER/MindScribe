@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { FaPaperPlane, FaSpinner, FaChevronDown, FaChevronRight } from "react-icons/fa";
+import { FaPaperPlane, FaSpinner, FaChevronDown, FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import { useFetchChatHistory, useSendMessage } from "../hooks/useChat";
 import { useLogout } from "../hooks/useLogout";
 import useChatStore from "../store/chatStore";
@@ -66,6 +66,7 @@ function Dashboard() {
   };
 
   const [prompt, setPrompt] = useState("");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const { mutate: sendMessage } = useSendMessage();
   const { data: chatHistoryData } = useFetchChatHistory();
@@ -130,11 +131,24 @@ function Dashboard() {
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-indigo-500 to-purple-600 text-white">
-      <div className="w-64 bg-gray-900 shadow-lg flex flex-col">
-        <div className="p-4 border-b border-gray-800">
-          <h2 className="text-xl font-semibold text-gray-200">Chats</h2>
+      {/* Sidebar */}
+      <div
+        className={`bg-gray-900 shadow-lg flex flex-col transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'w-16' : 'w-64'} overflow-hidden`}
+        style={{ minWidth: sidebarCollapsed ? '4rem' : '16rem', maxWidth: sidebarCollapsed ? '4rem' : '16rem' }}
+      >
+        <div className="p-4 border-b border-gray-800 flex items-center justify-between">
+          {!sidebarCollapsed && (
+            <h2 className="text-xl font-semibold text-gray-200">Chats</h2>
+          )}
+          <button
+            onClick={() => setSidebarCollapsed((prev) => !prev)}
+            className="ml-auto text-gray-400 hover:text-white focus:outline-none"
+            aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {sidebarCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
+          </button>
         </div>
-        <div className="flex-1 overflow-y-auto">
+        <div className={`flex-1 overflow-y-auto transition-opacity duration-200 ${sidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
           {chatHistory?.map((chat) => (
             <div
               key={chat.id}
@@ -150,12 +164,14 @@ function Dashboard() {
             </div>
           ))}
         </div>
-        <button
-          onClick={startNewConversation}
-          className="m-4 p-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-150 flex items-center justify-center"
-        >
-          New Chat
-        </button>
+        {!sidebarCollapsed && (
+          <button
+            onClick={startNewConversation}
+            className="m-4 p-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-150 flex items-center justify-center"
+          >
+            New Chat
+          </button>
+        )}
       </div>
 
       {/* Main Chat Area */}
