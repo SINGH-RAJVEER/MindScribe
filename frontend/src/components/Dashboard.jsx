@@ -5,8 +5,8 @@ import { useLogout } from "../hooks/useLogout";
 import useChatStore from "../store/chatStore";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import PropTypes from "prop-types";
 
-// Reasoning Box Component
 const ReasoningBox = ({ reasoningText }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -40,6 +40,10 @@ const ReasoningBox = ({ reasoningText }) => {
   );
 };
 
+ReasoningBox.propTypes = {
+  reasoningText: PropTypes.string,
+};
+
 function Dashboard() {
   const {
     chatHistory,
@@ -50,7 +54,6 @@ function Dashboard() {
   } = useChatStore();
   const chatEndRef = useRef(null);
 
-  // Updated function to extract both reasoning and clean response
   const extractBotContent = (text) => {
     const thinkingMatch = text.match(/<think>([\s\S]*?)<\/think>/);
     const reasoning = thinkingMatch ? thinkingMatch[1].trim() : null;
@@ -167,9 +170,7 @@ function Dashboard() {
           </button>
         </header>
 
-        {/* Chat Container with proper height constraints */}
         <div className="flex-1 flex flex-col p-4 min-h-0">
-          {/* Chat Messages - Fixed height container */}
           <div className="flex-1 rounded-lg bg-gray-800 shadow-lg mb-4 flex flex-col min-h-0">
             <div className="p-4 border-b border-gray-700 flex-shrink-0">
               <h2 className="text-xl font-semibold text-gray-200">Chat</h2>
@@ -179,25 +180,20 @@ function Dashboard() {
               {selectedConversation ? (
                 <div className="space-y-4">
                   {selectedConversation.messages.map((message, idx) => {
-                    // Extract content for bot responses
                     const botContent = message.bot_response 
                       ? extractBotContent(message.bot_response)
                       : null;
 
                     return (
                       <div key={message.id || idx} className="flex flex-col space-y-2">
-                        {/* User Message */}
                         {message.user_message && (
                           <div className="rounded-lg p-3 bg-indigo-600 ml-auto max-w-[80%] break-words">
                             {message.user_message}
                           </div>
                         )}
-                        {/* Bot Response */}
                         {message.bot_response && (
                           <div className="max-w-[80%] break-words">
-                            {/* Reasoning Box */}
                             <ReasoningBox reasoningText={botContent?.reasoning} />
-                            {/* Main Response */}
                             <div className="rounded-lg p-3 bg-gray-700">
                               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {botContent?.cleanResponse}
@@ -214,7 +210,6 @@ function Dashboard() {
                       response...
                     </div>
                   )}
-                  {/* Dummy div for auto-scroll */}
                   <div ref={chatEndRef} />
                 </div>
               ) : (
@@ -225,7 +220,6 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* Input form - Fixed at bottom */}
           <form onSubmit={handleSendMessage} className="flex space-x-2 flex-shrink-0">
             <input
               type="text"
