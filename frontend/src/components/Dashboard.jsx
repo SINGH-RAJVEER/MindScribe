@@ -132,19 +132,19 @@ function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-indigo-500 to-purple-600 text-white">
+    <div className="flex h-screen bg-gray-50 text-gray-900">
       {/* Sidebar */}
       <div
-        className={`bg-gray-900 shadow-lg flex flex-col transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'w-16' : 'w-64'} overflow-hidden`}
+        className={`bg-white shadow-lg flex flex-col transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'w-16' : 'w-64'} overflow-hidden`}
         style={{ minWidth: sidebarCollapsed ? '4rem' : '16rem', maxWidth: sidebarCollapsed ? '4rem' : '16rem' }}
       >
-        <div className="p-4 border-b border-gray-800 flex items-center justify-between">
+        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
           {!sidebarCollapsed && (
-            <h2 className="text-xl font-semibold text-gray-200">Chats</h2>
+            <h2 className="text-xl font-semibold">Chats</h2>
           )}
           <button
             onClick={() => setSidebarCollapsed((prev) => !prev)}
-            className="ml-auto text-gray-400 hover:text-white focus:outline-none"
+            className="ml-auto text-gray-400 hover:text-gray-700 focus:outline-none"
             aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {sidebarCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
@@ -154,10 +154,10 @@ function Dashboard() {
           {chatHistory?.map((chat) => (
             <div
               key={chat.id}
-              className={`p-3 hover:bg-gray-800 cursor-pointer transition-colors duration-150 ${
+              className={`p-3 hover:bg-gray-100 cursor-pointer transition-colors duration-150 ${
                 selectedConversation &&
                 selectedConversation.id === chat.id
-                  ? "bg-gray-800"
+                  ? "bg-gray-100"
                   : ""
               }`}
               onClick={() => setSelectedConversation(chat)}
@@ -178,8 +178,8 @@ function Dashboard() {
 
       {/* Main Chat Area */}
       <div className="flex flex-1 flex-col h-screen">
-        <header className="bg-gray-800 p-4 shadow-md flex justify-between flex-shrink-0">
-          <h1 className="text-2xl font-bold text-gray-200">MindScribe</h1>
+        <header className="bg-white p-4 border-b border-gray-200 shadow-md flex justify-between flex-shrink-0">
+          <h1 className="text-2xl font-bold">MindScribe</h1>
           <button
             onClick={logout}
             className="bg-red-600 px-4 py-2 rounded-md text-white hover:bg-red-700"
@@ -189,9 +189,9 @@ function Dashboard() {
         </header>
 
         <div className="flex-1 flex flex-col p-4 min-h-0">
-          <div className="flex-1 rounded-lg bg-gray-800 shadow-lg mb-4 flex flex-col min-h-0">
-            <div className="p-4 border-b border-gray-700 flex-shrink-0">
-              <h2 className="text-xl font-semibold text-gray-200">Chat</h2>
+          <div className="flex-1 rounded-lg bg-white shadow-lg mb-4 flex flex-col min-h-0 border border-gray-200">
+            <div className="p-4 border-b border-gray-200 flex-shrink-0">
+              <h2 className="text-xl font-semibold">Chat</h2>
             </div>
             
             <div className="flex-1 overflow-y-auto p-4 min-h-0">
@@ -205,14 +205,14 @@ function Dashboard() {
                     return (
                       <div key={message.id || idx} className="flex flex-col space-y-2">
                         {message.user_message && (
-                          <div className="rounded-lg p-3 bg-indigo-600 ml-auto max-w-[80%] break-words">
+                          <div className="rounded-lg p-3 bg-indigo-600 ml-auto max-w-[80%] break-words text-white">
                             {message.user_message}
                           </div>
                         )}
                         {message.bot_response && (
                           <div className="max-w-[80%] break-words">
                             <ReasoningBox reasoningText={botContent?.reasoning} />
-                            <div className="rounded-lg p-3 bg-gray-700">
+                            <div className="rounded-lg p-3 bg-gray-100">
                               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {botContent?.cleanResponse}
                               </ReactMarkdown>
@@ -245,11 +245,11 @@ function Dashboard() {
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Enter your prompt"
               disabled={loading}
-              className="flex-1"
+              className="flex-1 bg-white border border-gray-300"
             />
             <Button
               type="submit"
-              className="flex items-center"
+              className="flex items-center bg-indigo-600 hover:bg-indigo-700 text-white"
               disabled={loading}
             >
               {loading ? (
