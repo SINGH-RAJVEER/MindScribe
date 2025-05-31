@@ -156,8 +156,8 @@ function Dashboard() {
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex flex-1 flex-col">
-        <header className="bg-gray-800 p-4 shadow-md flex justify-between">
+      <div className="flex flex-1 flex-col h-screen">
+        <header className="bg-gray-800 p-4 shadow-md flex justify-between flex-shrink-0">
           <h1 className="text-2xl font-bold text-gray-200">MindScribe</h1>
           <button
             onClick={logout}
@@ -167,13 +167,17 @@ function Dashboard() {
           </button>
         </header>
 
-        <main className="flex-1 flex flex-col p-4">
-          {/* Chat Messages */}
-          <div className="flex-1 rounded-lg bg-gray-800 p-4 shadow-lg mb-4 flex flex-col">
-            <h2 className="mb-4 text-xl font-semibold text-gray-200">Chat</h2>
-            <div className="flex-1 overflow-y-auto space-y-4">
+        {/* Chat Container with proper height constraints */}
+        <div className="flex-1 flex flex-col p-4 min-h-0">
+          {/* Chat Messages - Fixed height container */}
+          <div className="flex-1 rounded-lg bg-gray-800 shadow-lg mb-4 flex flex-col min-h-0">
+            <div className="p-4 border-b border-gray-700 flex-shrink-0">
+              <h2 className="text-xl font-semibold text-gray-200">Chat</h2>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4 min-h-0">
               {selectedConversation ? (
-                <>
+                <div className="space-y-4">
                   {selectedConversation.messages.map((message, idx) => {
                     // Extract content for bot responses
                     const botContent = message.bot_response 
@@ -212,17 +216,17 @@ function Dashboard() {
                   )}
                   {/* Dummy div for auto-scroll */}
                   <div ref={chatEndRef} />
-                </>
+                </div>
               ) : (
-                <div className="flex-1 flex items-center justify-center">
+                <div className="h-full flex items-center justify-center">
                   <p className="text-gray-400">Select a chat or start a new one</p>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Input form */}
-          <form onSubmit={handleSendMessage} className="flex space-x-2">
+          {/* Input form - Fixed at bottom */}
+          <form onSubmit={handleSendMessage} className="flex space-x-2 flex-shrink-0">
             <input
               type="text"
               value={prompt}
@@ -243,7 +247,7 @@ function Dashboard() {
               )}
             </button>
           </form>
-        </main>
+        </div>
       </div>
     </div>
   );
