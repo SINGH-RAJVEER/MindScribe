@@ -7,10 +7,12 @@ const db = require("./database");
 const fetch = global.fetch; 
 
 const getChatResponse = async (userMessage) => {
-  // Ensure that MODEL_API_URL is correctly set in your .env file
-  const url = process.env.MODEL_API_URL || "http://localhost:11434/api/models/your_model_name/predict";
+  // Use /api/generate and specify the model in the payload
+  const url = process.env.MODEL_API_URL || "http://localhost:11434/api/generate";
   const payload = {
-    input: userMessage, // using "input" as expected by Ollama 
+    model: "deepseek-r1:8b",
+    prompt: userMessage,
+    stream: false
   };
   try {
     const response = await fetch(url, {
@@ -18,7 +20,6 @@ const getChatResponse = async (userMessage) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
-    // Read the raw text response
     const text = await response.text();
     console.log("Raw response from model endpoint:", text);
     let data;
