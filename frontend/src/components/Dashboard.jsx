@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { FaPaperPlane, FaSpinner, FaChevronDown, FaChevronRight, FaChevronLeft } from "react-icons/fa";
+import { FaPaperPlane, FaSpinner, FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { useFetchChatHistory, useSendMessage } from "../hooks/useChat";
 import { useLogout } from "../hooks/useLogout";
 import useChatStore from "../store/chatStore";
@@ -8,6 +8,7 @@ import remarkGfm from "remark-gfm";
 import PropTypes from "prop-types";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { Sidebar } from "./ui/sidebar";
 
 const ReasoningBox = ({ reasoningText }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -133,48 +134,28 @@ function Dashboard() {
 
   return (
     <div className="flex h-screen bg-gray-50 text-gray-900">
-      {/* Sidebar */}
-      <div
-        className={`bg-white shadow-lg flex flex-col transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'w-16' : 'w-64'} overflow-hidden`}
-        style={{ minWidth: sidebarCollapsed ? '4rem' : '16rem', maxWidth: sidebarCollapsed ? '4rem' : '16rem' }}
-      >
-        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-          {!sidebarCollapsed && (
-            <h2 className="text-xl font-semibold">Chats</h2>
-          )}
-          <button
-            onClick={() => setSidebarCollapsed((prev) => !prev)}
-            className="ml-auto text-gray-400 hover:text-gray-700 focus:outline-none"
-            aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      {/* Sidebar (shadcn/ui) */}
+      <Sidebar collapsed={sidebarCollapsed} onCollapse={() => setSidebarCollapsed((prev) => !prev)}>
+        {chatHistory?.map((chat) => (
+          <div
+            key={chat.id}
+            className={`p-3 hover:bg-accent cursor-pointer transition-colors duration-150 rounded-md mx-2 my-1 ${
+              selectedConversation && selectedConversation.id === chat.id ? "bg-accent" : ""
+            }`}
+            onClick={() => setSelectedConversation(chat)}
           >
-            {sidebarCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
-          </button>
-        </div>
-        <div className={`flex-1 overflow-y-auto transition-opacity duration-200 ${sidebarCollapsed ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-          {chatHistory?.map((chat) => (
-            <div
-              key={chat.id}
-              className={`p-3 hover:bg-gray-100 cursor-pointer transition-colors duration-150 ${
-                selectedConversation &&
-                selectedConversation.id === chat.id
-                  ? "bg-gray-100"
-                  : ""
-              }`}
-              onClick={() => setSelectedConversation(chat)}
-            >
-              {chat?.messages[0]?.user_message?.slice(0, 20) || "New Chat"}
-            </div>
-          ))}
-        </div>
+            {chat?.messages[0]?.user_message?.slice(0, 20) || "New Chat"}
+          </div>
+        ))}
         {!sidebarCollapsed && (
-          <button
+          <Button
             onClick={startNewConversation}
-            className="m-4 p-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors duration-150 flex items-center justify-center"
+            className="m-4 w-[calc(100%-2rem)]"
           >
             New Chat
-          </button>
+          </Button>
         )}
-      </div>
+      </Sidebar>
 
       {/* Main Chat Area */}
       <div className="flex flex-1 flex-col h-screen">
