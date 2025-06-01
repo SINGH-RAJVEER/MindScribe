@@ -17,37 +17,40 @@ MindScribe is your friendly AI-assisted chat companion dedicated to mental well-
 
 ## Installation
 
-To get started with MindScribe, simply clone the repository and follow the instructions below:
+To get started with MindScribe, simply follow the instructions below:
 
 1. **Clone the repository:**
+
 ```bash
 git clone https://github.com/SINGH-RAJVEER/MindScribe.git
 cd MindScribe
 ```
 
-2. **Install dependencies and start servers:**
+2. **Start MongoDB server:**
 
-   - **In one terminal, start the backend:**
-     ```bash
-     cd backend
-     npm install
-     npm run dev
-     ```
-     > Leave this terminal running.
+   ```bash
+   # Start MongoDB service
+   mongod --dbpath /path/to/your/data/directory
+   ```
 
-   - **In a new terminal, start the frontend:**
-     ```bash
-     cd MindScribe/frontend
-     npm install
-     npm start
-     ```
+   > Make sure MongoDB is installed on your system. If not, follow the [MongoDB installation guide](https://www.mongodb.com/docs/manual/installation/).
 
-3. **Install and run Ollama with a model (e.g., llama3):**
+3. **Install dependencies and start servers:**
+
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+   > Leave this terminal running.
+
+4. **Install and run Ollama with a model (e.g., llama3):**
 
    - **Download and install Ollama:**  
-     Follow the instructions for your OS from the [Ollama website](https://ollama.com/download).
+     Follow the instructions for your OS from the [Ollama website](https://ollama.com/download) and add the name of the model in the chatbot.js file.
 
    - **Start the Ollama server and pull a model (e.g., llama3):**
+
      ```bash
      # Start Ollama (if not already running)
      ollama serve
