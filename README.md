@@ -46,7 +46,8 @@ cd MindScribe
 
    ```bash
    npm install
-   npm run dev
+   npm run build
+   npm start
    ```
 
    > Leave this terminal running.
