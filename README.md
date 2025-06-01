@@ -29,8 +29,15 @@ cd MindScribe
 2. **Start MongoDB server:**
 
    ```bash
-   # Start MongoDB service
-   mongod --dbpath /path/to/your/data/directory
+   # If installed via Homebrew (macOS)
+   brew services start mongodb-community
+
+   # If installed via package manager (Linux)
+   sudo systemctl start mongod
+
+   # If installed via Windows installer
+   # MongoDB runs as a Windows service automatically
+   # To verify status, open Services app and check "MongoDB" service
    ```
 
    > Make sure MongoDB is installed on your system. If not, follow the [MongoDB installation guide](https://www.mongodb.com/docs/manual/installation/).
@@ -52,7 +59,7 @@ cd MindScribe
    - **Start the Ollama server and pull a model (e.g., llama3.2:3b):**
 
      ```bash
-     # In a new terminal, pull the llama3 model
+     # In a new terminal, pull the llama3.2:3b model
      ollama pull llama3.2:3b
      ```
 
