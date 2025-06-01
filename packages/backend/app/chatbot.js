@@ -10,8 +10,15 @@ const fetch = global.fetch;
 const getChatResponse = async (userMessage) => {
   // Specify the model in the payload
   const url = process.env.MODEL_API_URL || "http://localhost:11434/api/generate";
+  const availableModels = ["llama3.2:3b", "deepseek-r1:8b"];
+  const selectedModel = process.env.SELECTED_MODEL || "llama3.2:3b";
+  
+  if (!availableModels.includes(selectedModel)) {
+    throw new Error(`Invalid model selected. Available models are: ${availableModels.join(", ")}`);
+  }
+
   const payload = {
-    model: "llama3.2:3b", // "deepseek-r1:8b",
+    model: selectedModel,
     prompt: userMessage,
     stream: false
   };

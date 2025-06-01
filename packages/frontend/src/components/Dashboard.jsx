@@ -96,33 +96,7 @@ function Dashboard() {
     sendMessage(
       { message: prompt, conversationId: selectedConversation?.id },
       {
-        onSuccess: (response) => {
-          if (!selectedConversation) {
-            const newConversation = {
-              id: response.conversation_id,
-              messages: [
-                { id: Date.now(), text: prompt, type: "user" },
-                { id: Date.now() + 1, text: response.response, type: "ai" },
-              ],
-            };
-            setSelectedConversation(newConversation);
-            setChatHistory((prev) => [newConversation, ...prev]);
-          } else {
-            const updatedConversation = {
-              ...selectedConversation,
-              messages: [
-                ...selectedConversation.messages,
-                { id: Date.now(), text: prompt, type: "user" },
-                { id: Date.now() + 1, text: response.response, type: "ai" },
-              ],
-            };
-            setSelectedConversation(updatedConversation);
-            setChatHistory((prev) =>
-              prev.map((chat) =>
-                chat.id === selectedConversation.id ? updatedConversation : chat
-              )
-            );
-          }
+        onSuccess: () => {
           setPrompt("");
         },
       }
