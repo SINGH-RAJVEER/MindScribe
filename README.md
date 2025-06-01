@@ -73,7 +73,3 @@ We believe in the power of community and warmly welcome contributions from devel
 ## License
 
 MindScribe is open-source under the [MIT License](LICENSE).
-
-## A Message from Our Team
-
-Stay positive, and remember—you're never alone.
