@@ -28,7 +28,7 @@ function Register() {
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleRegister}>
-          <div className="rounded-md shadow-sm -space-y-px">
+          <div className="rounded-md shadow-sm space-y-4">
             <div>
               <Input
                 id="username"
@@ -38,7 +38,7 @@ function Register() {
                 placeholder="Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="rounded-t-md"
+                className="rounded-md"
               />
             </div>
             <div>
@@ -51,6 +51,7 @@ function Register() {
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="rounded-md"
               />
             </div>
             <div>
@@ -63,7 +64,7 @@ function Register() {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="rounded-b-md"
+                className="rounded-md"
               />
             </div>
           </div>

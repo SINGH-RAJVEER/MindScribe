@@ -25,7 +25,7 @@ function Login() {
           <h2 className="mt-6 text-center text-3xl font-extrabold text-foreground">Sign in to your account</h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-          <div className="rounded-md shadow-sm -space-y-px">
+          <div className="rounded-md shadow-sm space-y-4">
             <div>
               <Input
                 id="email-address"
@@ -36,7 +36,7 @@ function Login() {
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="rounded-t-md"
+                className="rounded-md"
               />
             </div>
             <div>
@@ -49,7 +49,7 @@ function Login() {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="rounded-b-md"
+                className="rounded-md"
               />
             </div>
           </div>
