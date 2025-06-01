@@ -63,7 +63,7 @@ When you run the application, you'll be greeted by a warm, inviting chat interfa
 MindScribe is an open-source project built with a modern tech stack:
 
 - **Node.js** and **Express** for the backend server
-- **React** with **Tailwind CSS** for a fast, responsive, and modern frontend user interface
+- **React** with **Tailwind CSS** and **Shadcn UI** for a fast, responsive, and modern frontend user interface
 - **MongoDB** as the lightweight NOSQL database
 - **Ollama** for AI model integration
 - **Authentication** is implemented using **bcrypt** for password hashing, **JWT** for token-based authentication, and **express-validator** for input validation
