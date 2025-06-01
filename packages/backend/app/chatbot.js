@@ -3,6 +3,7 @@ const router = express.Router();
 const { v4: uuidv4 } = require("uuid");
 const { getCurrentUser } = require("./auth");
 const { CRISIS_WORDS, DETECT_MOOD } = require("./moodCrisisData");
+const { getSystemPrompt } = require("./systemPrompt");
 const Conversation = require("./models/Conversation");
 const Message = require("./models/Message");
 const fetch = global.fetch; 
@@ -19,7 +20,7 @@ const getChatResponse = async (userMessage) => {
 
   const payload = {
     model: selectedModel,
-    prompt: userMessage,
+    prompt: getSystemPrompt(userMessage),
     stream: false
   };
   try {
