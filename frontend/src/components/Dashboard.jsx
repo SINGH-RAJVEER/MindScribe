@@ -9,7 +9,8 @@ import PropTypes from "prop-types";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Sidebar } from "./ui/sidebar";
-import headerImg from "../assets/header.jpeg";
+import headerImg from "../assets/header.png";
+import ThemeToggle from "./ThemeToggle";
 
 const ReasoningBox = ({ reasoningText }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -134,7 +135,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 text-gray-900">
+    <div className="flex h-screen bg-background text-foreground">
       {/* Sidebar (shadcn/ui) */}
       <Sidebar collapsed={sidebarCollapsed} onCollapse={() => setSidebarCollapsed((prev) => !prev)}>
         {chatHistory?.map((chat) => (
@@ -160,7 +161,7 @@ function Dashboard() {
 
       {/* Main Chat Area */}
       <div className="flex flex-1 flex-col h-screen">
-        <header className="bg-white p-4 border-b border-gray-200 shadow-md flex justify-between items-center flex-shrink-0">
+        <header className="bg-card p-4 border-b border-border shadow-md flex justify-between items-center flex-shrink-0">
           <div className="flex-1 flex items-center">
             <div
               className="overflow-hidden flex items-center"
@@ -169,21 +170,24 @@ function Dashboard() {
               <img
                 src={headerImg}
                 alt="MindScribe Logo"
-                className="object-cover h-16 w-auto"
+                className="object-cover h-16 w-auto bg-transparent"
                 style={{ objectPosition: 'center' }}
               />
             </div>
           </div>
-          <button
-            onClick={logout}
-            className="bg-red-600 px-4 py-2 rounded-md text-white hover:bg-red-700 ml-4"
-          >
-            Logout
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+            <button
+              onClick={logout}
+              className="bg-red-600 px-4 py-2 rounded-md text-white hover:bg-red-700 ml-4"
+            >
+              Logout
+            </button>
+          </div>
         </header>
 
         <div className="flex-1 flex flex-col p-4 min-h-0">
-          <div className="flex-1 rounded-lg bg-white shadow-lg mb-4 flex flex-col min-h-0 border border-gray-200">
+          <div className="flex-1 rounded-lg bg-card shadow-lg mb-4 flex flex-col min-h-0 border border-border">
             <div className="p-4 border-b border-gray-200 flex-shrink-0">
               <h2 className="text-xl font-semibold">Chat</h2>
             </div>
@@ -206,7 +210,7 @@ function Dashboard() {
                         {message.bot_response && (
                           <div className="max-w-[80%] break-words">
                             <ReasoningBox reasoningText={botContent?.reasoning} />
-                            <div className="rounded-lg p-3 bg-gray-100">
+                            <div className="rounded-lg p-3 bg-gray-100 dark:text-black">
                               <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {botContent?.cleanResponse}
                               </ReactMarkdown>
@@ -239,11 +243,11 @@ function Dashboard() {
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Enter your prompt"
               disabled={loading}
-              className="flex-1 bg-white border border-gray-300"
+              className="flex-1 bg-background border border-input text-foreground"
             />
             <Button
               type="submit"
-              className="flex items-center bg-indigo-600 hover:bg-indigo-700 text-white"
+              className="flex items-center bg-primary hover:bg-primary/80 text-primary-foreground dark:bg-primary dark:hover:bg-primary/80 dark:text-primary-foreground"
               disabled={loading}
             >
               {loading ? (

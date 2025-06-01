@@ -11,7 +11,7 @@ const getChatResponse = async (userMessage) => {
   // Use /api/generate and specify the model in the payload
   const url = process.env.MODEL_API_URL || "http://localhost:11434/api/generate";
   const payload = {
-    model: "deepseek-r1:8b",
+    model: "llama3.2:3b", // "deepseek-r1:8b",
     prompt: userMessage,
     stream: false
   };
