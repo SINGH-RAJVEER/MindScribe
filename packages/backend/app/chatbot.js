@@ -147,4 +147,28 @@ router.get("/history", getCurrentUser, async (req, res) => {
   }
 });
 
+// DELETE /chat/:conversationId
+router.delete("/:conversationId", getCurrentUser, async (req, res) => {
+  const { user } = req;
+  const { conversationId } = req.params;
+
+  try {
+    // Delete all messages associated with the conversation
+    await Message.deleteMany({ 
+      user_id: user.id,
+      conversation_id: conversationId 
+    });
+
+    // Delete the conversation itself
+    await Conversation.deleteOne({ 
+      _id: conversationId,
+      user_id: user.id 
+    });
+
+    res.json({ message: "Conversation deleted successfully" });
+  } catch (err) {
+    return res.status(500).json({ detail: err.message });
+  }
+});
+
 module.exports = { chatbotRouter: router };

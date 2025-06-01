@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { FaPaperPlane, FaSpinner, FaChevronDown, FaChevronRight } from "react-icons/fa";
-import { useFetchChatHistory, useSendMessage } from "../hooks/useChat";
+import { FaPaperPlane, FaSpinner, FaChevronDown, FaChevronRight, FaTrash } from "react-icons/fa";
+import { useFetchChatHistory, useSendMessage, useDeleteChat } from "../hooks/useChat";
 import { useLogout } from "../hooks/useLogout";
 import useChatStore from "../store/chatStore";
 import ReactMarkdown from "react-markdown";
@@ -76,6 +76,7 @@ function Dashboard() {
   const { mutate: sendMessage } = useSendMessage();
   const { data: chatHistoryData } = useFetchChatHistory();
   const { mutate: logout } = useLogout();
+  const { mutate: deleteChat } = useDeleteChat();
 
   useEffect(() => {
     if (chatHistoryData) {
@@ -108,6 +109,11 @@ function Dashboard() {
     setPrompt("");
   };
 
+  const handleDeleteChat = (e, chatId) => {
+    e.stopPropagation(); // Prevent chat selection when clicking delete
+    deleteChat(chatId);
+  };
+
   return (
     <div className="flex h-screen bg-background text-foreground">
       {/* Sidebar (shadcn/ui) */}
@@ -120,7 +126,19 @@ function Dashboard() {
             }`}
             onClick={() => setSelectedConversation(chat)}
           >
-            {chat?.messages[0]?.user_message?.slice(0, 20) || "New Chat"}
+            <div className="flex items-center justify-between">
+              <span className="truncate">
+                {chat?.messages[0]?.user_message?.slice(0, 20) || "New Chat"}
+              </span>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-destructive hover:text-destructive/90 hover:bg-destructive/10"
+                onClick={(e) => handleDeleteChat(e, chat.id)}
+              >
+                <FaTrash className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         ))}
         {!sidebarCollapsed && (

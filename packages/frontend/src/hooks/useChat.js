@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchChatHistory, sendMessage } from "../api/chatApi";
+import { fetchChatHistory, sendMessage, deleteChat } from "../api/chatApi";
 import useChatStore from "../store/chatStore";
 
 export const useFetchChatHistory = () => {
@@ -64,6 +64,25 @@ export const useSendMessage = () => {
     onError: (error) => {
       console.error("Error sending message:", error);
       setLoading(false);
+    },
+  });
+};
+
+export const useDeleteChat = () => {
+  const queryClient = useQueryClient();
+  const deleteConversation = useChatStore((state) => state.deleteConversation);
+
+  return useMutation({
+    mutationFn: async (conversationId) => {
+      const response = await deleteChat(conversationId);
+      return response;
+    },
+    onSuccess: (_, conversationId) => {
+      deleteConversation(conversationId);
+      queryClient.invalidateQueries(["chatHistory"]);
+    },
+    onError: (error) => {
+      console.error("Error deleting chat:", error);
     },
   });
 };

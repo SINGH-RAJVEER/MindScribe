@@ -44,7 +44,13 @@ const useChatStore = create((set) => ({
         ? updateFn(state.selectedConversation)
         : state.selectedConversation
     };
-  })
+  }),
+
+  // Add delete conversation action
+  deleteConversation: (conversationId) => set((state) => ({
+    chatHistory: state.chatHistory.filter(chat => chat.id !== conversationId),
+    selectedConversation: state.selectedConversation?.id === conversationId ? null : state.selectedConversation
+  }))
 }));
 
 export default useChatStore;

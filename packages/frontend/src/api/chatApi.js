@@ -13,3 +13,8 @@ export const sendMessage = async ({ message, conversationId }) => {
   console.log(response.data)
   return response.data;
 };
+
+export const deleteChat = async (conversationId) => {
+  const response = await axiosInstance.delete(`/chat/${conversationId}`);
+  return response.data;
+};
