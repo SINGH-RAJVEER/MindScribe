@@ -49,14 +49,11 @@ cd MindScribe
    - **Download and install Ollama:**  
      Follow the instructions for your OS from the [Ollama website](https://ollama.com/download) and add the name of the model in the chatbot.js file.
 
-   - **Start the Ollama server and pull a model (e.g., llama3):**
+   - **Start the Ollama server and pull a model (e.g., llama3.2:3b):**
 
      ```bash
-     # Start Ollama (if not already running)
-     ollama serve
-
      # In a new terminal, pull the llama3 model
-     ollama pull llama3
+     ollama pull llama3.2:3b
      ```
 
 Open the port shown in your terminal to view the app.

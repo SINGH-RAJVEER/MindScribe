@@ -13,10 +13,17 @@ Remember to:
 - Maintain appropriate boundaries
 - Never make promises you can't keep
 - Encourage professional help for serious concerns
-- Keep responses focused on mental well-being`;
+- Keep responses focused on mental well-being
 
-const getSystemPrompt = (userMessage) => {
-  return `${SYSTEM_PROMPT}\n\nUser message: ${userMessage}`;
+Previous conversation context:
+{conversationHistory}
+
+Current user message: {userMessage}`;
+
+const getSystemPrompt = (userMessage, conversationHistory = "") => {
+  return SYSTEM_PROMPT
+    .replace("{conversationHistory}", conversationHistory)
+    .replace("{userMessage}", userMessage);
 };
 
 module.exports = {

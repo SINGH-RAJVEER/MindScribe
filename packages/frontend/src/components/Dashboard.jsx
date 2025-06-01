@@ -169,14 +169,14 @@ function Dashboard() {
             <div className="flex-1 overflow-y-auto p-4 min-h-0">
               {selectedConversation ? (
                 <>
-                  <div className="space-y-4 flex flex-col-reverse">
+                  <div className="space-y-6 flex flex-col-reverse">
                     {selectedConversation.messages.map((message, idx) => {
                       const botContent = message.bot_response 
                         ? extractBotContent(message.bot_response)
                         : null;
 
                       return (
-                        <div key={message.id || idx} className="flex flex-col space-y-2">
+                        <div key={message.id || idx} className="flex flex-col space-y-4 py-2">
                           {message.user_message && (
                             <div className="rounded-lg p-3 bg-indigo-600 ml-auto max-w-[80%] break-words text-white">
                               {message.user_message}

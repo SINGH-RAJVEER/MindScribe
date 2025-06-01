@@ -8,7 +8,7 @@ const Conversation = require("./models/Conversation");
 const Message = require("./models/Message");
 const fetch = global.fetch; 
 
-const getChatResponse = async (userMessage) => {
+const getChatResponse = async (userMessage, conversationId) => {
   // Specify the model in the payload
   const url = process.env.MODEL_API_URL || "http://localhost:11434/api/generate";
   const availableModels = ["llama3.2:3b", "deepseek-r1:8b"];
@@ -18,9 +18,21 @@ const getChatResponse = async (userMessage) => {
     throw new Error(`Invalid model selected. Available models are: ${availableModels.join(", ")}`);
   }
 
+  // Get conversation history if conversationId exists
+  let conversationHistory = "";
+  if (conversationId) {
+    const messages = await Message.find({ conversation_id: conversationId })
+      .sort({ timestamp: 1 })
+      .lean();
+    
+    conversationHistory = messages.map(msg => 
+      `User: ${msg.user_message}\nAssistant: ${msg.bot_response}`
+    ).join("\n\n");
+  }
+
   const payload = {
     model: selectedModel,
-    prompt: getSystemPrompt(userMessage),
+    prompt: getSystemPrompt(userMessage, conversationHistory),
     stream: false
   };
   try {
@@ -94,7 +106,7 @@ router.post("/", getCurrentUser, async (req, res) => {
       responseText = "Please seek professional help. You're not alone ❤️.";
     else {
       try {
-        responseText = await getChatResponse(user_message);
+        responseText = await getChatResponse(user_message, conversation_id);
       } catch (err) {
         return res.status(500).json({ detail: err.message });
       }
