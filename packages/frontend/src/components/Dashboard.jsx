@@ -168,40 +168,42 @@ function Dashboard() {
             
             <div className="flex-1 overflow-y-auto p-4 min-h-0">
               {selectedConversation ? (
-                <div className="space-y-4">
-                  {selectedConversation.messages.map((message, idx) => {
-                    const botContent = message.bot_response 
-                      ? extractBotContent(message.bot_response)
-                      : null;
+                <>
+                  <div className="space-y-4 flex flex-col-reverse">
+                    {selectedConversation.messages.map((message, idx) => {
+                      const botContent = message.bot_response 
+                        ? extractBotContent(message.bot_response)
+                        : null;
 
-                    return (
-                      <div key={message.id || idx} className="flex flex-col space-y-2">
-                        {message.user_message && (
-                          <div className="rounded-lg p-3 bg-indigo-600 ml-auto max-w-[80%] break-words text-white">
-                            {message.user_message}
-                          </div>
-                        )}
-                        {message.bot_response && (
-                          <div className="max-w-[80%] break-words">
-                            <ReasoningBox reasoningText={botContent?.reasoning} />
-                            <div className="rounded-lg p-3 bg-gray-100 dark:text-black">
-                              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                                {botContent?.cleanResponse}
-                              </ReactMarkdown>
+                      return (
+                        <div key={message.id || idx} className="flex flex-col space-y-2">
+                          {message.user_message && (
+                            <div className="rounded-lg p-3 bg-indigo-600 ml-auto max-w-[80%] break-words text-white">
+                              {message.user_message}
                             </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                          )}
+                          {message.bot_response && (
+                            <div className="max-w-[80%] break-words">
+                              <ReasoningBox reasoningText={botContent?.reasoning} />
+                              <div className="rounded-lg p-3 bg-gray-100 dark:text-black">
+                                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                  {botContent?.cleanResponse}
+                                </ReactMarkdown>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                    <div ref={chatEndRef} />
+                  </div>
                   {loading && (
-                    <div className="text-gray-400 flex items-center">
+                    <div className="text-gray-400 flex items-center mt-4">
                       <FaSpinner className="animate-spin mr-2" /> Generating
                       response...
                     </div>
                   )}
-                  <div ref={chatEndRef} />
-                </div>
+                </>
               ) : (
                 <div className="h-full flex items-center justify-center">
                   <p className="text-gray-400">Select a chat or start a new one</p>
