@@ -21,10 +21,16 @@ const getChatResponse = async (userMessage, conversationId) => {
   // Get conversation history if conversationId exists
   let conversationHistory = "";
   if (conversationId) {
+    // Get the last 10 messages for context to keep it manageable
     const messages = await Message.find({ conversation_id: conversationId })
-      .sort({ timestamp: 1 })
+      .sort({ timestamp: -1 })
+      .limit(10)
       .lean();
     
+    // Reverse the messages to maintain chronological order
+    messages.reverse();
+    
+    // Format the conversation history
     conversationHistory = messages.map(msg => 
       `User: ${msg.user_message}\nAssistant: ${msg.bot_response}`
     ).join("\n\n");
