@@ -133,7 +133,7 @@ function Dashboard() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-destructive hover:text-destructive/90 hover:bg-destructive/10"
+                className="h-8 w-8 text-muted-foreground hover:text-red-500 hover:bg-red-500/10"
                 onClick={(e) => handleDeleteChat(e, chat.id)}
               >
                 <FaTrash className="h-4 w-4" />
