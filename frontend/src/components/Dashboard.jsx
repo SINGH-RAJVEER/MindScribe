@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Sidebar } from "./ui/sidebar";
+import headerImg from "../assets/header.jpeg";
 
 const ReasoningBox = ({ reasoningText }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -159,11 +160,23 @@ function Dashboard() {
 
       {/* Main Chat Area */}
       <div className="flex flex-1 flex-col h-screen">
-        <header className="bg-white p-4 border-b border-gray-200 shadow-md flex justify-between flex-shrink-0">
-          <h1 className="text-2xl font-bold">MindScribe</h1>
+        <header className="bg-white p-4 border-b border-gray-200 shadow-md flex justify-between items-center flex-shrink-0">
+          <div className="flex-1 flex items-center">
+            <div
+              className="overflow-hidden flex items-center"
+              style={{ height: '64px', maxHeight: '64px', minWidth: '0' }}
+            >
+              <img
+                src={headerImg}
+                alt="MindScribe Logo"
+                className="object-cover h-16 w-auto"
+                style={{ objectPosition: 'center' }}
+              />
+            </div>
+          </div>
           <button
             onClick={logout}
-            className="bg-red-600 px-4 py-2 rounded-md text-white hover:bg-red-700"
+            className="bg-red-600 px-4 py-2 rounded-md text-white hover:bg-red-700 ml-4"
           >
             Logout
           </button>
