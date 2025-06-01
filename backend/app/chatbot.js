@@ -3,7 +3,8 @@ const router = express.Router();
 const { v4: uuidv4 } = require("uuid");
 const { getCurrentUser } = require("./auth");
 const { CRISIS_WORDS, DETECT_MOOD } = require("./moodCrisisData");
-const db = require("./database");
+const Conversation = require("./models/Conversation");
+const Message = require("./models/Message");
 const fetch = global.fetch; 
 
 const getChatResponse = async (userMessage) => {
@@ -50,39 +51,36 @@ const detectMood = (userMessage) => {
   return null;
 };
 
-const createNewConversation = (userId, conversationId, callback) => {
-  db.run("INSERT INTO conversations (id, user_id) VALUES (?, ?)", [conversationId, userId], callback);
+const createNewConversation = async (userId, conversationId) => {
+  const conversation = new Conversation({ _id: conversationId, user_id: userId });
+  await conversation.save();
 };
 
-const storeChat = (userId, conversationId, userMessage, botResponse, mood, isCrisis, callback) => {
+const storeChat = async (userId, conversationId, userMessage, botResponse, mood, isCrisis) => {
   const messageId = uuidv4();
-  db.run(
-    `INSERT INTO messages (id, user_id, conversation_id, user_message, bot_response, mood, is_crisis, timestamp)
-     VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))`,
-    [messageId, userId, conversationId, userMessage, botResponse, mood, isCrisis],
-    callback
-  );
+  const message = new Message({
+    _id: messageId,
+    user_id: userId,
+    conversation_id: conversationId,
+    user_message: userMessage,
+    bot_response: botResponse,
+    mood,
+    is_crisis: isCrisis,
+  });
+  await message.save();
 };
 
-router.post("/", getCurrentUser, (req, res) => {
+router.post("/", getCurrentUser, async (req, res) => {
   const { user } = req;
   let { user_message, conversation_id } = req.body;
   const isCrisis = CRISIS_WORDS.some(word => user_message.toLowerCase().includes(word));
   const mood = detectMood(user_message);
 
-  if (!conversation_id) {
-    conversation_id = uuidv4();
-    createNewConversation(user.id, conversation_id, (err) => {
-      if (err) return res.status(500).json({ detail: err.message });
-      // Call processChat and catch errors
-      processChat();
-    });
-  } else {
-    processChat();
-  }
-
-  // Modify processChat to be async to await getChatResponse
-  async function processChat() {
+  try {
+    if (!conversation_id) {
+      conversation_id = uuidv4();
+      await createNewConversation(user.id, conversation_id);
+    }
     let responseText;
     if (isCrisis)
       responseText = "Please seek professional help. You're not alone ❤️.";
@@ -93,40 +91,40 @@ router.post("/", getCurrentUser, (req, res) => {
         return res.status(500).json({ detail: err.message });
       }
     }
-    storeChat(user.id, conversation_id, user_message, responseText, mood, isCrisis, (err) => {
-      if (err) return res.status(500).json({ detail: err.message });
-      res.json({ response: responseText, conversation_id, mood });
-    });
+    await storeChat(user.id, conversation_id, user_message, responseText, mood, isCrisis);
+    res.json({ response: responseText, conversation_id, mood });
+  } catch (err) {
+    return res.status(500).json({ detail: err.message });
   }
 });
 
 // GET /chat/history
-router.get("/history", getCurrentUser, (req, res) => {
+router.get("/history", getCurrentUser, async (req, res) => {
   const { user } = req;
-  const limit = req.query.limit || 10;
-  db.all(
-    `SELECT conversation_id, user_message, bot_response, mood, is_crisis, timestamp 
-     FROM messages WHERE user_id = ? ORDER BY timestamp DESC LIMIT ?`,
-    [user.id, limit],
-    (err, rows) => {
-      if (err) return res.status(500).json({ detail: err.message });
-      // Group messages by conversation_id
-      const conversations = {};
-      rows.forEach((row) => {
-        if (!conversations[row.conversation_id])
-          conversations[row.conversation_id] = { id: row.conversation_id, messages: [], timestamp: row.timestamp };
-        conversations[row.conversation_id].messages.push({
-          id: uuidv4(),
-          user_message: row.user_message,
-          bot_response: row.bot_response,
-          mood: row.mood,
-          is_crisis: row.is_crisis,
-          timestamp: row.timestamp
-        });
+  const limit = parseInt(req.query.limit) || 10;
+  try {
+    const messages = await Message.find({ user_id: user.id })
+      .sort({ timestamp: -1 })
+      .limit(limit)
+      .lean();
+    // Group messages by conversation_id
+    const conversations = {};
+    messages.forEach((row) => {
+      if (!conversations[row.conversation_id])
+        conversations[row.conversation_id] = { id: row.conversation_id, messages: [], timestamp: row.timestamp };
+      conversations[row.conversation_id].messages.push({
+        id: row._id,
+        user_message: row.user_message,
+        bot_response: row.bot_response,
+        mood: row.mood,
+        is_crisis: row.is_crisis,
+        timestamp: row.timestamp
       });
-      res.json({ history: Object.values(conversations) });
-    }
-  );
+    });
+    res.json({ history: Object.values(conversations) });
+  } catch (err) {
+    return res.status(500).json({ detail: err.message });
+  }
 });
 
 module.exports = { chatbotRouter: router };

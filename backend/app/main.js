@@ -4,7 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const { chatbotRouter } = require("./chatbot");
 const { authRouter } = require("./auth");
-
+const db = require("./database");
 const app = express();
 const PORT = 8000;
 

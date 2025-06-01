@@ -3,9 +3,9 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
-const db = require("./database");
 const { SECRET_KEY, ALGORITHM } = require("./config");
 const { body, validationResult } = require("express-validator");
+const User = require("./models/User");
 
 // Create JWT token
 const createJwtToken = (payload) => {
@@ -31,41 +31,39 @@ const getCurrentUser = (req, res, next) => {
 router.post("/register",
   async (req, res) => {
     const { username, email, password } = req.body;
-    db.get("SELECT id FROM users WHERE email = ?", [email], (err, row) => {
-      if (err) return res.status(500).json({ detail: err.message });
-      if (row) return res.status(400).json({ detail: "Email already registered" });
-
-      bcrypt.hash(password, 10, (err, hash) => {
-        if (err) return res.status(500).json({ detail: err.message });
-        db.run("INSERT INTO users (username, email, password) VALUES (?, ?, ?)",
-          [username, email, hash],
-          function(err) {
-            if (err) return res.status(400).json({ detail: "Username already exists" });
-            res.json({ message: "User registered successfully" });
-          }
-        );
-      });
-    });
+    try {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) return res.status(400).json({ detail: "Email already registered" });
+      const hash = await bcrypt.hash(password, 10);
+      const user = new User({ username, email, password: hash });
+      await user.save();
+      res.json({ message: "User registered successfully" });
+    } catch (err) {
+      if (err.code === 11000) {
+        return res.status(400).json({ detail: "Username or email already exists" });
+      }
+      return res.status(500).json({ detail: err.message });
+    }
   }
 );
 
 // POST /auth/login
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  db.get("SELECT id, username, password FROM users WHERE email = ?", [email], (err, row) => {
-    if (err) return res.status(500).json({ detail: err.message });
-    if (!row) return res.status(401).json({ detail: "Invalid email or password" });
-
-    bcrypt.compare(password, row.password, (err, result) => {
-      if (err || !result) return res.status(401).json({ detail: "Invalid email or password" });
-      const token = createJwtToken({ user_id: row.id });
-      res.json({
-        access_token: token,
-        token_type: "bearer",
-        user: { id: row.id, username: row.username, email }
-      });
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(401).json({ detail: "Invalid email or password" });
+    const result = await bcrypt.compare(password, user.password);
+    if (!result) return res.status(401).json({ detail: "Invalid email or password" });
+    const token = createJwtToken({ user_id: user._id });
+    res.json({
+      access_token: token,
+      token_type: "bearer",
+      user: { id: user._id, username: user.username, email: user.email }
     });
-  });
+  } catch (err) {
+    return res.status(500).json({ detail: err.message });
+  }
 });
 
 module.exports = { authRouter: router, getCurrentUser };
