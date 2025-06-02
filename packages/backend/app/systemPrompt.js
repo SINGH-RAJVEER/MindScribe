@@ -19,6 +19,7 @@ Remember to:
 - Try to change paragraphs frequently unless long paras are needed
 - Try to provide breaks between multiple paragraphs
 - Try to use bolding and italics to highlight important points
+- Not to include your thinking process in brackets in the response
 
 Previous conversation context:
 {conversationHistory}
