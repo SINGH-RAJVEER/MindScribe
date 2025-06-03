@@ -2,12 +2,9 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { v4: uuidv4 } = require("uuid");
 const { SECRET_KEY, ALGORITHM } = require("./config");
-const { body, validationResult } = require("express-validator");
 const User = require("./models/User");
 
-// Create JWT token
 const createJwtToken = (payload) => {
   const exp = Math.floor(Date.now() / 1000) + (60 * 60 * 24);
   return jwt.sign({ ...payload, exp }, SECRET_KEY, { algorithm: ALGORITHM });
